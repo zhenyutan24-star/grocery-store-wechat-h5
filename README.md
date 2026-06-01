@@ -8,14 +8,14 @@
 - 商家端：`owner.html`
 - 主入口：`index.html`
 
-## 公网预览
+## 可直接在微信打开的公网测试链接
 
-仓库公开后可先用 jsDelivr 打开：
+jsDelivr 对 HTML 文件在微信里可能会按纯文本显示，请使用下面的 raw.githack 链接测试：
 
-- 客户端：https://cdn.jsdelivr.net/gh/zhenyutan24-star/grocery-store-wechat-h5@main/client.html
-- 商家端：https://cdn.jsdelivr.net/gh/zhenyutan24-star/grocery-store-wechat-h5@main/owner.html
+- 客户端：https://raw.githack.com/zhenyutan24-star/grocery-store-wechat-h5/main/client.html
+- 商家端：https://raw.githack.com/zhenyutan24-star/grocery-store-wechat-h5/main/owner.html
 
-正式建议在 GitHub Pages / Cloudflare Pages / Netlify / Vercel 部署。
+正式使用建议部署到 GitHub Pages / Cloudflare Pages / Netlify / Vercel，并使用自己的公网域名。
 
 ## Supabase 云数据库
 
