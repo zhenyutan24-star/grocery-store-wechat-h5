@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>小店管家 H5</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div><p id="roleText">客户下单端</p><h1 id="titleText">街角小店</h1></div>
+    <button id="resetBtn" class="ghost">重置</button>
+  </header>
+  <div class="role-tabs"><button data-role="customer" class="active">客户端</button><button data-role="owner">商家端</button></div>
+
+  <main>
+    <section id="customerShop" class="page active customer-page">
+      <div class="hero"><b>街角小店在线点单</b><span>微信打开即可下单</span></div>
+      <input id="customerSearch" class="search" placeholder="搜索商品">
+      <div id="categoryTabs" class="chips"></div>
+      <div id="customerProducts" class="list"></div>
+    </section>
+
+    <section id="customerCartPage" class="page customer-page">
+      <h2>购物车</h2>
+      <div id="customerCart" class="cart empty">购物车还是空的</div>
+      <div class="total"><span>合计</span><b id="customerTotal">¥0.00</b></div>
+      <form id="customerForm" class="card">
+        <h3>收货信息</h3>
+        <label>姓名<input id="customerName" required></label>
+        <label>手机号<input id="customerPhone" required inputmode="tel"></label>
+        <label>地址<textarea id="customerAddress" required></textarea></label>
+        <label>备注<textarea id="customerNote"></textarea></label>
+        <label class="row"><span>保存为常用收货信息</span><input id="saveCustomerInfo" type="checkbox" checked></label>
+        <button class="primary">提交订单</button>
+      </form>
+    </section>
+
+    <section id="customerDone" class="page customer-page"><div id="confirmBox"></div></section>
+
+    <section id="ownerHome" class="page owner-page">
+      <div class="grid stats"><div><span>待处理</span><b id="pendingCount">0</b></div><div><span>今日订单</span><b id="todayCount">0</b></div><div><span>今日销售额</span><b id="todaySales">¥0.00</b></div><div><span>商品数</span><b id="productCount">0</b></div></div>
+      <details class="card" open>
+        <summary>云数据库同步</summary>
+        <div id="cloudStatus" class="notice warn">未配置云数据库</div>
+        <label>Supabase Project URL<input id="cloudUrl" placeholder="https://xxxx.supabase.co"></label>
+        <label>Supabase anon key<textarea id="cloudKey"></textarea></label>
+        <label>店铺 ID<input id="storeId" placeholder="store_001"></label>
+        <div class="grid"><button id="syncBtn" type="button">立即同步</button><button id="saveCloudBtn" type="button" class="primary">保存云配置</button></div>
+        <label>客户端微信链接<input id="clientLink" readonly></label>
+        <label>商家端微信链接<input id="ownerLink" readonly></label>
+        <div class="grid"><button id="copyClientBtn" type="button">复制客户端</button><button id="copyOwnerBtn" type="button">复制商家端</button></div>
+      </details>
+      <div class="grid quick"><button data-page="ownerProducts">商品管理</button><button data-page="ownerNewOrder" class="primary">店主开单</button><button data-page="ownerOrders">接单处理</button><button data-page="ownerStats">销售统计</button><button id="exportBtn">导出备份</button><button id="importBtn">导入备份</button></div>
+      <input id="backupInput" type="file" hidden accept="application/json">
+    </section>
+
+    <section id="ownerProducts" class="page owner-page">
+      <div class="toolbar"><input id="productSearch" placeholder="搜索商品"><button id="newProductBtn" class="primary">新增</button></div>
+      <form id="productForm" class="card hidden">
+        <input id="productId" type="hidden">
+        <label>商品名称<input id="productName" required></label>
+        <label>编号<input id="productCode"></label>
+        <div class="grid"><label>分类<input id="productCategory" required></label><label>单位<input id="productUnit" required></label></div>
+        <div class="grid"><label>售卖方式<select id="productMode"><option value="integer">按件</option><option value="decimal">称重</option></select></label><label>小数位<select id="productPrecision"><option>0</option><option>1</option><option selected>2</option><option>3</option></select></label></div>
+        <div class="grid"><label>进货价<input id="productCost" inputmode="decimal"></label><label>零售价<input id="productPrice" inputmode="decimal"></label></div>
+        <label>库存<input id="productStock" inputmode="decimal"></label>
+        <label>备注<textarea id="productNote"></textarea></label>
+        <label class="row"><span>启用</span><input id="productEnabled" type="checkbox" checked></label>
+        <div class="grid"><button type="button" id="cancelProductBtn">取消</button><button class="primary">保存商品</button></div>
+      </form>
+      <details class="card"><summary>进货单据导入</summary><p>格式：名称,编号,分类,单位,进货价,零售价,库存,售卖方式</p><textarea id="purchaseText" rows="5" placeholder="苹果,1001,水果,斤,3.2,5.8,20.5,称重"></textarea><button id="importPurchaseBtn" class="primary">导入商品</button></details>
+      <div id="productList" class="list"></div>
+    </section>
+
+    <section id="ownerNewOrder" class="page owner-page">
+      <div class="toolbar"><input id="ownerProductSearch" placeholder="搜索可售商品"><button id="clearOwnerCartBtn">清空</button></div>
+      <div id="ownerProductsForSale" class="goods-grid"></div>
+      <details class="card"><summary>拍照/文字导入订单</summary><input id="ocrImage" type="file" accept="image/*" capture="environment"><textarea id="ocrText" rows="4" placeholder="矿泉水 2\n苹果 1.5"></textarea><button id="importOrderTextBtn" class="primary">导入订单</button></details>
+      <h2>已选商品</h2><div id="ownerCart" class="cart empty">还没有选择商品</div><label>备注<textarea id="ownerNote"></textarea></label><div class="total"><span>总价</span><b id="ownerTotal">¥0.00</b></div><button id="saveOwnerOrderBtn" class="primary full">保存店主订单</button>
+    </section>
+
+    <section id="ownerOrders" class="page owner-page"><div id="statusFilter" class="chips"><button data-status="all" class="active">全部</button><button data-status="待处理">待处理</button><button data-status="配货中">配货中</button><button data-status="已完成">已完成</button><button data-status="已取消">已取消</button></div><div id="orderList" class="list"></div></section>
+    <section id="ownerStats" class="page owner-page"><div class="grid stats"><div><span>今日销售额</span><b id="statSales">¥0.00</b></div><div><span>今日订单</span><b id="statOrders">0</b></div><div><span>毛利</span><b id="statProfit">¥0.00</b></div><div><span>毛利率</span><b id="statRate">0%</b></div></div><h2>商品排行</h2><div id="rankList" class="list"></div><h2>7天趋势</h2><div id="trendList" class="card"></div></section>
+  </main>
+
+  <nav id="customerNav" class="bottom"><button data-page="customerShop" class="active">点单</button><button data-page="customerCartPage">购物车 <span id="cartBadge">0</span></button><button data-page="customerDone">确认</button></nav>
+  <nav id="ownerNav" class="bottom hidden"><button data-page="ownerHome" class="active">首页</button><button data-page="ownerProducts">商品</button><button data-page="ownerNewOrder">开单</button><button data-page="ownerOrders">接单</button><button data-page="ownerStats">统计</button></nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
